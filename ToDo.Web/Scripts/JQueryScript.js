@@ -12,7 +12,8 @@
             var task = $(ui.draggable);
             task.fadeOut(200, function () {
                 $(this).appendTo('#droppableArea').fadeIn(1000);
-            });
+                $('#droppableArea .todoItem #hideButton').hide();
+            });           
         }
     });
 
@@ -22,6 +23,7 @@
             var task = $(ui.draggable);
             task.fadeOut(200, function () {
                 $(this).appendTo('#dlTasks').fadeIn(1000);
+                $('#dlTasks .todoItem #hideButton').show();
             });
         }
     });
