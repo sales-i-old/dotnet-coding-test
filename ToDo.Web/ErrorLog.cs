@@ -58,8 +58,6 @@ namespace ToDo.Web
 
         private static string GetErrorFolder()
         {
-            //var dic = ConfigurationManager.GetSection("appSettings") as IDictionary;
-            //var folder = (dic == null || dic["ErrorLogFilesDir"] == null) ? "" : dic["ErrorLogFilesDir"].ToString().Trim();
             var folder = ConfigurationManager.AppSettings["ErrorLogFilesDir"];
             var url = Path.Combine(HttpRuntime.AppDomainAppPath, folder);
             return url;

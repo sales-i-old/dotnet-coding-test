@@ -27,7 +27,6 @@ namespace ToDo.Web
 
             try
             {
-                throw new Exception("check");
                 _toDoItems = _client.GetToDoItems("").ToList();
                 dlTasks.DataSource = _toDoItems;
                 dlTasks.DataBind();
@@ -36,6 +35,7 @@ namespace ToDo.Web
             }
             catch (Exception ex)
             {
+                // ANDREI: logged an exeption into ErrorLog folder
                 ErrorLog.Instance.WriteLog(ex);
                 _client.Abort();
             }
@@ -45,7 +45,7 @@ namespace ToDo.Web
         {
             // ANDREI: added a session mechanism to prevent the insert of the same task and/or insert on the page reload
             if (!IsPostBack) return;
-            if (Session["commentAdded"] != null) return;
+            if (Session["taskAdded"] != null) return;
             var toDoItem = new ToDoService.ToDoItemContract
             {
                 Title = txtTask.Text,
@@ -56,14 +56,14 @@ namespace ToDo.Web
 
             // update the UI
             LoadTasks();
-            Session.Add("commentAdded", true);
+            Session.Add("taskAdded", true);
         }
 
         private string Save(ToDoService.ToDoItemContract toDoItemContract)
         {
             // get the todo list items
             _client = new ToDoService.ToDoServiceClient();
-            
+
             try
             {
                 // save the new task
@@ -72,7 +72,8 @@ namespace ToDo.Web
             catch (Exception ex)
             {
                 _client.Abort();
-                // TODO: Client side save error message
+                // ANDREI: logged an exeption into ErrorLog folder
+                ErrorLog.Instance.WriteLog(ex);
                 return "";
             }
         }
@@ -122,14 +123,15 @@ namespace ToDo.Web
             }
             catch (Exception ex)
             {
-                // TODO: Log error
+                // ANDREI: logged an exeption into ErrorLog folder
+                ErrorLog.Instance.WriteLog(ex);
                 _client.Abort();
             }
         }
 
         protected void txtTask_TextChanged(object sender, EventArgs e)
         {
-            Session.Remove("commentAdded");
+            Session.Remove("taskAdded");
         }
     }
 }

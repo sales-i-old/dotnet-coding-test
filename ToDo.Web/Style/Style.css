@@ -1,0 +1,18 @@
+﻿body {
+    font-family: Arial;
+    font-size: 10pt;
+    /*color: #ED333A;*/
+    color: #9EA0A3;
+}
+
+#dlTasks, #droppableArea {
+    border: 1px solid #ED333A;
+    padding: 5px;
+    margin-top: 10px;
+    min-height: 100px;
+    width: 100%;
+}
+
+#logo, #todoItemInput {
+    margin-top: 10px;
+}
