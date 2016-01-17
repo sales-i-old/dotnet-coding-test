@@ -64,6 +64,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="create_table.sql" />
     <Content Include="Default.aspx" />
     <None Include="Service References\ToDoService\ToDo.Web.ToDoService.ToDoItemContract.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
