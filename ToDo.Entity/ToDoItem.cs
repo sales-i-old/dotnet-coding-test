@@ -11,8 +11,10 @@ namespace ToDo.Entity
         private string _title;
         private string _description;
         private bool _complete;
+        // ANDREI: added parent task properties
+        private string _parentTaskId;
+        private string _parentTaskTitle;
 
-        
 
         public string Id
         {
@@ -24,6 +26,19 @@ namespace ToDo.Entity
         {
             get { return _title; }
             set { _title = value; }
+        }
+
+        // ANDREI: set parent task id property
+        public string ParentTaskId
+        {
+            get { return _parentTaskId; }
+            set { _parentTaskId = value; }
+        }
+
+        public string ParentTaskTitle
+        {
+            get { return _parentTaskTitle; }
+            set { _parentTaskTitle = value; }
         }
 
         public string Description

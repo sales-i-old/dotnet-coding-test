@@ -11,6 +11,8 @@
       <xs:element minOccurs="0" name="Complete" type="xs:boolean" />
       <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Id" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ParentTaskId" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ParentTaskTitle" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Title" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
