@@ -27,6 +27,7 @@ namespace ToDo.Web
 
             try
             {
+                throw new Exception("check");
                 _toDoItems = _client.GetToDoItems("").ToList();
                 dlTasks.DataSource = _toDoItems;
                 dlTasks.DataBind();
@@ -35,7 +36,7 @@ namespace ToDo.Web
             }
             catch (Exception ex)
             {
-                // TODO: Log error
+                ErrorLog.Instance.WriteLog(ex);
                 _client.Abort();
             }
         }

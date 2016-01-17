@@ -19,7 +19,7 @@ namespace ToDo.DA.Mapper.MsSql
         {
             // sql to execute
             // ANDREI: changed the sql query
-            string sql = @"SELECT a.id, a.title, a.[description], a.complete, isnull(b.title, '') as parent_task_title
+            string sql = @"SELECT a.id, a.title, a.[description], a.complete, isnull(b.title, 'N/A') as parent_task_title
                             from ToDoItems a
                             left join ToDoItems b on a.parent_task_id = b.id";
 
