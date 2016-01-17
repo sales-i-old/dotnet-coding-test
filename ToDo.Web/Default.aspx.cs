@@ -43,6 +43,8 @@ namespace ToDo.Web
 
         protected void btn_AddTask_Click(object sender, EventArgs e)
         {
+            // ANDREI: validation should be on the client, make check only here for now
+            if (string.IsNullOrEmpty(txtTask.Text) || string.IsNullOrEmpty(txtDescription.Text)) return;
             // ANDREI: added a session mechanism to prevent the insert of the same task and/or insert on the page reload
             if (!IsPostBack) return;
             if (Session["taskAdded"] != null) return;
@@ -53,6 +55,9 @@ namespace ToDo.Web
             };
 
             Save(toDoItem);
+
+            txtTask.Text = "";
+            txtDescription.Text = "";
 
             // update the UI
             LoadTasks();
@@ -86,11 +91,16 @@ namespace ToDo.Web
 
         protected void dlTasks_UpdateCommand(Object sender, DataListCommandEventArgs e)
         {
+            var title = (e.Item.FindControl("txtUpdateTitle") as TextBox).Text;
+            var description = (e.Item.FindControl("txtUpdateDescription") as TextBox).Text;
+            // ANDREI: validation should be on the client, make check only here for now
+            if (string.IsNullOrEmpty(title) || string.IsNullOrEmpty(description)) return;
+
             var toDoItem = new ToDoService.ToDoItemContract
             {
                 Id = e.CommandArgument.ToString(),
-                Title = (e.Item.FindControl("txtUpdateTitle") as TextBox).Text,
-                Description = (e.Item.FindControl("txtUpdateDescription") as TextBox).Text,
+                Title = title,
+                Description = description,
                 Complete = (e.Item.FindControl("chkComplete") as CheckBox).Checked,
                 // ANDREI: set a parent task id property
                 ParentTaskId = (e.Item.FindControl("cboParentTask") as DropDownList).SelectedValue
