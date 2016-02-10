@@ -36,9 +36,14 @@
                             <br />
                             <asp:TextBox runat="server" ID="txtUpdateDescription" Text='<%# DataBinder.Eval(Container.DataItem, "Description") %>'></asp:TextBox>
                             <br />
+                            <asp:DropDownList runat="server" ID="parentlist" 
+                            DataSourceID="SqlDataSource1"   DataTextField="CategoryName"   DataValueField="CategoryID"
+                            />
+                            <br />
                             <asp:CheckBox runat="server" ID="chkComplete" Checked='<%# DataBinder.Eval(Container.DataItem, "Complete") %>' />
                             <br />
                             <asp:Button runat="server" ID="btnUpdate" Text="Save" CommandName="Update" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "Id") %>' />
+                            <br />
                         </li>
             </EditItemTemplate>
 

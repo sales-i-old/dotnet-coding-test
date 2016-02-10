@@ -49,6 +49,8 @@ namespace ToDo.DA.Mapper.MsSql
                             item.Title = reader.GetString(reader.GetOrdinal("title"));
                             item.Description = reader.GetString(reader.GetOrdinal("description"));
                             item.Complete = reader.GetBoolean(reader.GetOrdinal("complete"));
+                            if(!reader.IsDBNull(reader.GetOrdinal("parentid")))
+                                item.ParentId = reader.GetGuid(reader.GetOrdinal("parentid")).ToString();
 
                             items.Add(item);
                         }
@@ -69,7 +71,7 @@ namespace ToDo.DA.Mapper.MsSql
 
         public string Insert(IToDoItem toDoItem)
         {
-            string sql = "INSERT INTO ToDoItems (id, title, description, complete) OUTPUT INSERTED.id VALUES (NEWID(), @title, @description, 0)";
+            string sql = "INSERT INTO ToDoItems (id, title, description, complete, parentid) OUTPUT INSERTED.id VALUES (NEWID(), @title, @description, 0, @parentid)";
 
             // access the database and retrieve data
             using (IDbConnection conn = GetConnection())
@@ -79,9 +81,11 @@ namespace ToDo.DA.Mapper.MsSql
 
                 IDbDataParameter title = new SqlParameter("@title", toDoItem.Title);
                 IDbDataParameter description = new SqlParameter("@description", toDoItem.Description);
+                IDbDataParameter parentid = new SqlParameter("@parentid", toDoItem.ParentId);
 
                 command.Parameters.Add(title);
                 command.Parameters.Add(description);
+                command.Parameters.Add(parentid);
 
                 try
                 {
@@ -111,7 +115,8 @@ namespace ToDo.DA.Mapper.MsSql
                             SET title = @title
                             , description = @description
                             , complete = @complete
-                            WHERE id = @ids";
+                            , parentid = @parentid
+                            WHERE id = @id";
 
             // access the database and retrieve data
             using (IDbConnection conn = GetConnection())
@@ -123,11 +128,13 @@ namespace ToDo.DA.Mapper.MsSql
                 IDbDataParameter description = new SqlParameter("@description", toDoItem.Description);
                 IDbDataParameter complete = new SqlParameter("@complete", toDoItem.Complete);
                 IDbDataParameter id = new SqlParameter("@id", toDoItem.Id);
+                IDbDataParameter parentid = new SqlParameter("@parentid", toDoItem.Id);
 
                 command.Parameters.Add(title);
                 command.Parameters.Add(description);
                 command.Parameters.Add(complete);
                 command.Parameters.Add(id);
+                command.Parameters.Add(parentid);
 
                 try
                 {
