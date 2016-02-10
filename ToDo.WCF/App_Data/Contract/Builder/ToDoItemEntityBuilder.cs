@@ -15,6 +15,7 @@ namespace ToDo.WCF.Contract.Builder
             toDoItem.Title = toDoItemContract.Title;
             toDoItem.Description = toDoItemContract.Description;
             toDoItem.Complete = toDoItemContract.Complete;
+            toDoItem.RelatedId = toDoItemContract.RelatedId;
 
             return toDoItem;
         }

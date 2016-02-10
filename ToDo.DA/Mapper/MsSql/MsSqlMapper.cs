@@ -14,7 +14,8 @@ namespace ToDo.DA.Mapper.MsSql
         public IDbConnection GetConnection()
         {
             // TODO: Get connection string from the config. A valid connection string already exists in the relevant config
-            return new SqlConnection("Data Source=(LocalDB)\v11.0;");
+            //return new SqlConnection("Data Source=(LocalDB)\v11.0;");
+            return new SqlConnection(ConfigurationManager.ConnectionStrings["ToDoDatabase"].ConnectionString);
         }
     }
 }

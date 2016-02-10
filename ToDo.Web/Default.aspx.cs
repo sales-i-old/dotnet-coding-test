@@ -27,6 +27,8 @@ namespace ToDo.Web
                 List<ToDoService.ToDoItemContract> toDoItems = client.GetToDoItems("").ToList();
                 dlTasks.DataSource = toDoItems;
                 dlTasks.DataBind();
+                ddlRelatedTask.DataSource = toDoItems;
+                ddlRelatedTask.DataBind();
 
                 client.Close();
             }
@@ -42,7 +44,8 @@ namespace ToDo.Web
             ToDoService.ToDoItemContract toDoItem = new ToDoService.ToDoItemContract();
             toDoItem.Title = txtTask.Text;
             toDoItem.Description = txtDescription.Text;
-
+            toDoItem.RelatedId = ddlRelatedTask.SelectedValue;
+            
             Save(toDoItem);
 
             // update the UI
@@ -80,6 +83,7 @@ namespace ToDo.Web
             toDoItem.Title = (e.Item.FindControl("txtUpdateTitle") as TextBox).Text;
             toDoItem.Description = (e.Item.FindControl("txtUpdateDescription") as TextBox).Text;
             toDoItem.Complete = (e.Item.FindControl("chkComplete") as CheckBox).Checked;
+            toDoItem.RelatedId = (e.Item.FindControl("ddlRelatedTask") as DropDownList).SelectedValue;
 
             Save(toDoItem);
 
