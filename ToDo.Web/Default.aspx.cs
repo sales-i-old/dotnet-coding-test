@@ -34,7 +34,9 @@ namespace ToDo.Web
             }
             catch (Exception ex)
             {
-                // TODO: Log error
+                // TODO: log errors to database and / or use existing logging frameworks (Elmah, Log4Net etc)
+                
+                //Show error 
                 Server.Transfer("Error.aspx", true);
                 client.Abort();
             }
