@@ -18,7 +18,7 @@ namespace ToDo.DA.Mapper.MsSql
         public IList<IToDoItem> GetToDoItems(string idFilter = "")
         {
             // sql to execute
-            string sql = "select tdo1.*, isnull(tdo2.Title,'') RelatedTaskTitle from ToDoItems tdo1 left join ToDoItems tdo2 on tdo1.id = tdo2.id ";
+            string sql = "select tdo1.*, isnull(tdo2.Title,'') RelatedTaskTitle from ToDoItems tdo1 left join ToDoItems tdo2 on tdo1.relatedid = tdo2.id ";
 
             // instantiate list to populate
             List<IToDoItem> items = new List<IToDoItem>();
@@ -49,7 +49,8 @@ namespace ToDo.DA.Mapper.MsSql
                             item.Title = reader.GetString(reader.GetOrdinal("title"));
                             item.Description = reader.GetString(reader.GetOrdinal("description"));
                             item.Complete = reader.GetBoolean(reader.GetOrdinal("complete"));
-                            item.RelatedId = !reader.IsDBNull(reader.GetOrdinal("relatedid")) ? reader.GetGuid(reader.GetOrdinal("relatedid")).ToString() : string.Empty;
+                            if (!reader.IsDBNull(reader.GetOrdinal("relatedid")))
+                                item.RelatedId = reader.GetGuid(reader.GetOrdinal("relatedid")).ToString();
                             item.RelatedTaskTitle = reader.GetString(reader.GetOrdinal("RelatedTaskTitle")).ToString();
 
                             items.Add(item);
@@ -81,7 +82,12 @@ namespace ToDo.DA.Mapper.MsSql
 
                 IDbDataParameter title = new SqlParameter("@title", toDoItem.Title);
                 IDbDataParameter description = new SqlParameter("@description", toDoItem.Description);
-                IDbDataParameter relatedid = new SqlParameter("@relatedid", toDoItem.RelatedId);
+                IDbDataParameter relatedid;
+
+                if (string.IsNullOrEmpty(toDoItem.RelatedId))
+                    relatedid = new SqlParameter("@relatedid", DBNull.Value);
+                else
+                    relatedid = new SqlParameter("@relatedid", toDoItem.RelatedId); 
 
                 command.Parameters.Add(title);
                 command.Parameters.Add(description);
@@ -128,7 +134,12 @@ namespace ToDo.DA.Mapper.MsSql
                 IDbDataParameter description = new SqlParameter("@description", toDoItem.Description);
                 IDbDataParameter complete = new SqlParameter("@complete", toDoItem.Complete);
                 IDbDataParameter id = new SqlParameter("@id", toDoItem.Id);
-                IDbDataParameter relatedid = new SqlParameter("@relatedid", toDoItem.RelatedId);
+                IDbDataParameter relatedid;
+
+                if (string.IsNullOrEmpty(toDoItem.RelatedId))
+                    relatedid = new SqlParameter("@relatedid", DBNull.Value); 
+                else
+                    relatedid = new SqlParameter("@relatedid", toDoItem.RelatedId); 
 
                 command.Parameters.Add(title);
                 command.Parameters.Add(description);

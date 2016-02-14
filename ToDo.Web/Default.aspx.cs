@@ -9,6 +9,8 @@ namespace ToDo.Web
 {
     public partial class Default : System.Web.UI.Page
     {
+        public List<ToDoService.ToDoItemContract> toDoItems;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
@@ -24,11 +26,12 @@ namespace ToDo.Web
 
             try
             {
-                List<ToDoService.ToDoItemContract> toDoItems = client.GetToDoItems("").ToList();
+                toDoItems = client.GetToDoItems("").ToList();
                 dlTasks.DataSource = toDoItems;
                 dlTasks.DataBind();
                 ddlRelatedTask.DataSource = toDoItems;
                 ddlRelatedTask.DataBind();
+                ddlRelatedTask.Items.Insert(0, new ListItem("None", string.Empty));
 
                 client.Close();
             }
@@ -92,6 +95,42 @@ namespace ToDo.Web
 
             // update the UI
             LoadTasks();
+        }
+
+        protected void dlTasks_ItemDataBound(object sender, DataListItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.EditItem)
+            {
+                ToDoService.ToDoItemContract toDoItem = (ToDoService.ToDoItemContract)e.Item.DataItem;
+
+                var ddlRelatedTask = e.Item.FindControl("ddlRelatedTask") as DropDownList;
+                var chkComplete = e.Item.FindControl("chkComplete") as CheckBox;
+
+                //Disable complete checkbox if related task not completed
+                AllowCompletion(toDoItem, chkComplete);
+
+                string currentRelatedId = toDoItem.RelatedId;
+
+                ddlRelatedTask.DataSource = toDoItems;
+                ddlRelatedTask.DataBind();
+                ddlRelatedTask.Items.Insert(0, new ListItem("None", string.Empty));
+
+                //Set related item
+                ddlRelatedTask.SelectedValue = currentRelatedId;
+            }
+        }
+
+        private void AllowCompletion(ToDoService.ToDoItemContract toDoItem, CheckBox chkComplete)
+        {
+            if (!string.IsNullOrEmpty(toDoItem.RelatedId))
+            {
+                bool isAllowed =  toDoItems.Single(i => i.Id == toDoItem.RelatedId).Complete;
+                
+                if (!isAllowed)
+                    chkComplete.Text = string.Format("Requires {0} to be completed first", toDoItem.RelatedTaskTitle);
+
+                chkComplete.Enabled = isAllowed;
+            }
         }
     }
 }
