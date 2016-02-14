@@ -35,6 +35,7 @@ namespace ToDo.Web
             catch (Exception ex)
             {
                 // TODO: Log error
+                Server.Transfer("Error.aspx", true);
                 client.Abort();
             }
         }
@@ -46,7 +47,7 @@ namespace ToDo.Web
             toDoItem.Description = txtDescription.Text;
             toDoItem.RelatedId = ddlRelatedTask.SelectedValue;
             
-            Save(toDoItem);
+            ShowResult(Save(toDoItem));
 
             // update the UI
             LoadTasks();
@@ -65,8 +66,7 @@ namespace ToDo.Web
             catch (Exception ex)
             {
                 client.Abort();
-                // TODO: Client side save error message
-                return "";
+                return ex.Message;
             }
         }
 
@@ -84,8 +84,8 @@ namespace ToDo.Web
             toDoItem.Description = (e.Item.FindControl("txtUpdateDescription") as TextBox).Text;
             toDoItem.Complete = (e.Item.FindControl("chkComplete") as CheckBox).Checked;
             toDoItem.RelatedId = (e.Item.FindControl("ddlRelatedTask") as DropDownList).SelectedValue;
-
-            Save(toDoItem);
+         
+            ShowResult(Save(toDoItem));
 
             // take the list out of edit mode
             dlTasks.EditItemIndex = -1;
@@ -93,5 +93,22 @@ namespace ToDo.Web
             // update the UI
             LoadTasks();
         }
+
+        private void ShowResult(string result)
+        {
+            Guid newId;
+
+            //show success if guid returned
+            if (Guid.TryParse(result, out newId))
+            {
+                ltMessage.Text = "Task saved.<br />";
+            }
+            else
+            {
+                ltMessage.Text = string.Format("Error: {0} <br />", result);
+            }
+        }
+
+
     }
 }
