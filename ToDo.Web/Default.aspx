@@ -10,6 +10,7 @@
     <form id="form1" runat="server">
     <div>
         <h1>ACME To Do List</h1>
+        <asp:Literal ID="ltMessage" Text="" runat="server"></asp:Literal> 
         <div>
             <asp:TextBox runat="server" ID="txtTask"></asp:TextBox>
             <br />
