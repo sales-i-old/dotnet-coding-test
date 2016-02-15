@@ -19,7 +19,7 @@
             <asp:Button runat="server" ID="btnAddTask" Text="Add Task" OnClick="btn_AddTask_Click" />
             
         </div>
-        <asp:DataList runat="server" ID="dlTasks" OnEditCommand="dlTasks_EditCommand" OnUpdateCommand="dlTasks_UpdateCommand" DataKeyField="Id" >
+        <asp:DataList runat="server" ID="dlTasks" OnEditCommand="dlTasks_EditCommand" OnUpdateCommand="dlTasks_UpdateCommand" OnItemDataBound="dlTasks_ItemDataBound" DataKeyField="Id" >
             <HeaderTemplate>
                 <div id="todoItems">
                     <ol>
@@ -27,7 +27,7 @@
 
             <ItemTemplate>
                         <li>
-                            <%# DataBinder.Eval(Container.DataItem, "Title") %> (Related to task <%# DataBinder.Eval(Container.DataItem, "RelatedTaskTitle") %>)
+                            <%# DataBinder.Eval(Container.DataItem, "Title") %> (Related to <%# DataBinder.Eval(Container.DataItem, "RelatedId") == null ? "none" : Eval("RelatedTaskTitle") %>)
                             <br />
                             <asp:CheckBox runat="server" ID="chkComplete" Enabled="false" Checked='<%# DataBinder.Eval(Container.DataItem, "Complete") %>' />
                             <br />
@@ -41,9 +41,9 @@
                             <br />
                             <asp:TextBox runat="server" ID="txtUpdateDescription" Text='<%# DataBinder.Eval(Container.DataItem, "Description") %>'></asp:TextBox>
                             <br />
-                            <asp:CheckBox runat="server" ID="chkComplete" Checked='<%# DataBinder.Eval(Container.DataItem, "Complete") %>' />
+                            <asp:CheckBox runat="server" ID="chkComplete" Text="Complete ?" Checked='<%# DataBinder.Eval(Container.DataItem, "Complete") %>' />
                             <br />
-                            <asp:DropDownList runat="server" ID="ddlRelatedId" DataTextField="Title" DataValueField="RelatedId" />
+                            <asp:DropDownList runat="server" ID="ddlRelatedTask" DataTextField="Title" DataValueField="Id" />
                             <br />
                             <asp:Button runat="server" ID="btnUpdate" Text="Save" CommandName="Update" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "Id") %>' />
                         </li>
