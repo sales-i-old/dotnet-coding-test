@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -15,7 +16,7 @@ namespace ToDo.Web
         {
             if (!Page.IsPostBack)
             {
-                LoadTasks();                
+                LoadTasks();
             }
         }
 
@@ -31,6 +32,8 @@ namespace ToDo.Web
                 dlTasks.DataBind();
                 ddlRelatedTask.DataSource = toDoItems;
                 ddlRelatedTask.DataBind();
+                rptTasks.DataSource = toDoItems;
+                rptTasks.DataBind();
                 ddlRelatedTask.Items.Insert(0, new ListItem("None", string.Empty));
 
                 client.Close();
@@ -38,7 +41,7 @@ namespace ToDo.Web
             catch (Exception ex)
             {
                 // TODO: log errors to database and / or use existing logging frameworks (Elmah, Log4Net etc)
-                
+
                 //Show error 
                 Server.Transfer("Error.aspx", true);
                 client.Abort();
@@ -51,18 +54,18 @@ namespace ToDo.Web
             toDoItem.Title = txtTask.Text;
             toDoItem.Description = txtDescription.Text;
             toDoItem.RelatedId = ddlRelatedTask.SelectedValue;
-            
+
             ShowResult(Save(toDoItem));
 
             // update the UI
             LoadTasks();
         }
 
-        private string Save(ToDoService.ToDoItemContract toDoItemContract)
+        private static string Save(ToDoService.ToDoItemContract toDoItemContract)
         {
             // get the todo list items
             ToDoService.ToDoServiceClient client = new ToDoService.ToDoServiceClient();
-            
+
             try
             {
                 // save the new task
@@ -89,7 +92,7 @@ namespace ToDo.Web
             toDoItem.Description = (e.Item.FindControl("txtUpdateDescription") as TextBox).Text;
             toDoItem.Complete = (e.Item.FindControl("chkComplete") as CheckBox).Checked;
             toDoItem.RelatedId = (e.Item.FindControl("ddlRelatedTask") as DropDownList).SelectedValue;
-         
+
             ShowResult(Save(toDoItem));
 
             // take the list out of edit mode
@@ -126,8 +129,8 @@ namespace ToDo.Web
         {
             if (!string.IsNullOrEmpty(toDoItem.RelatedId))
             {
-                bool isAllowed =  toDoItems.Single(i => i.Id == toDoItem.RelatedId).Complete;
-                
+                bool isAllowed = toDoItems.Single(i => i.Id == toDoItem.RelatedId).Complete;
+
                 if (!isAllowed)
                     chkComplete.Text = string.Format("Requires {0} to be completed first", toDoItem.RelatedTaskTitle);
 
@@ -148,6 +151,18 @@ namespace ToDo.Web
             {
                 ltMessage.Text = string.Format("Error: {0} <br />", result);
             }
+        }
+
+        [WebMethod]
+        public static string AddTask(string title, string description, string relatedId)
+        {
+            ToDoService.ToDoItemContract toDoItem = new ToDoService.ToDoItemContract();
+
+            toDoItem.Title = title;
+            toDoItem.Description = description;
+            toDoItem.RelatedId = relatedId;
+
+            return Save(toDoItem);
         }
     }
 }
