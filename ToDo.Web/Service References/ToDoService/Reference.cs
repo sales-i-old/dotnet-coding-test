@@ -32,13 +32,13 @@ namespace ToDo.Web.ToDoService {
         private string IdField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string TitleField;
-
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int ParentIdField;
-
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int OrderIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ParentIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string TitleField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -90,6 +90,32 @@ namespace ToDo.Web.ToDoService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public int OrderId {
+            get {
+                return this.OrderIdField;
+            }
+            set {
+                if ((this.OrderIdField.Equals(value) != true)) {
+                    this.OrderIdField = value;
+                    this.RaisePropertyChanged("OrderId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ParentId {
+            get {
+                return this.ParentIdField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ParentIdField, value) != true)) {
+                    this.ParentIdField = value;
+                    this.RaisePropertyChanged("ParentId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public string Title {
             get {
                 return this.TitleField;
@@ -98,40 +124,6 @@ namespace ToDo.Web.ToDoService {
                 if ((object.ReferenceEquals(this.TitleField, value) != true)) {
                     this.TitleField = value;
                     this.RaisePropertyChanged("Title");
-                }
-            }
-        }
-
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public int ParentId
-        {
-            get
-            {
-                return this.ParentIdField;
-            }
-            set
-            {
-                if ((object.ReferenceEquals(this.ParentIdField, value) != true))
-                {
-                    this.ParentIdField = value;
-                    this.RaisePropertyChanged("ParentId");
-                }
-            }
-        }
-
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public int OrderId
-        {
-            get
-            {
-                return this.OrderIdField;
-            }
-            set
-            {
-                if ((object.ReferenceEquals(this.OrderIdField, value) != true))
-                {
-                    this.OrderIdField = value;
-                    this.RaisePropertyChanged("OrderId");
                 }
             }
         }
@@ -155,6 +147,9 @@ namespace ToDo.Web.ToDoService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IToDoService/SaveToDoItem", ReplyAction="http://tempuri.org/IToDoService/SaveToDoItemResponse")]
         string SaveToDoItem(ToDo.Web.ToDoService.ToDoItemContract toDoItem);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IToDoService/UpdateDependentTasks", ReplyAction="http://tempuri.org/IToDoService/UpdateDependentTasksResponse")]
+        void UpdateDependentTasks(ToDo.Web.ToDoService.ToDoItemContract toDoItem);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -190,6 +185,10 @@ namespace ToDo.Web.ToDoService {
         
         public string SaveToDoItem(ToDo.Web.ToDoService.ToDoItemContract toDoItem) {
             return base.Channel.SaveToDoItem(toDoItem);
+        }
+        
+        public void UpdateDependentTasks(ToDo.Web.ToDoService.ToDoItemContract toDoItem) {
+            base.Channel.UpdateDependentTasks(toDoItem);
         }
     }
 }

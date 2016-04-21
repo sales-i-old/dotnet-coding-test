@@ -1,8 +1,10 @@
 CREATE TABLE [dbo].[ToDoItems](
-[id] [uniqueidentifier] NOT NULL,
-[title] [nvarchar](250) NOT NULL,
-[description] [nvarchar](max) NULL,
-[complete] [bit] NOT NULL,
+	[id] [uniqueidentifier] NOT NULL,
+	[title] [nvarchar](250) NOT NULL,
+	[description] [nvarchar](max) NULL,
+	[complete] [bit] NOT NULL,
+	[parentid] [uniqueidentifier] NULL,
+	[orderid] [int] NOT NULL,
  CONSTRAINT [PK_ToDoItems] PRIMARY KEY CLUSTERED 
 (
 [id] ASC

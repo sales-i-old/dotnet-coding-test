@@ -19,6 +19,12 @@
   <wsdl:message name="IToDoService_SaveToDoItem_OutputMessage">
     <wsdl:part name="parameters" element="tns:SaveToDoItemResponse" />
   </wsdl:message>
+  <wsdl:message name="IToDoService_UpdateDependentTasks_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateDependentTasks" />
+  </wsdl:message>
+  <wsdl:message name="IToDoService_UpdateDependentTasks_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateDependentTasksResponse" />
+  </wsdl:message>
   <wsdl:portType name="IToDoService">
     <wsdl:operation name="GetToDoItems">
       <wsdl:input wsaw:Action="http://tempuri.org/IToDoService/GetToDoItems" message="tns:IToDoService_GetToDoItems_InputMessage" />
@@ -27,6 +33,10 @@
     <wsdl:operation name="SaveToDoItem">
       <wsdl:input wsaw:Action="http://tempuri.org/IToDoService/SaveToDoItem" message="tns:IToDoService_SaveToDoItem_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IToDoService/SaveToDoItemResponse" message="tns:IToDoService_SaveToDoItem_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateDependentTasks">
+      <wsdl:input wsaw:Action="http://tempuri.org/IToDoService/UpdateDependentTasks" message="tns:IToDoService_UpdateDependentTasks_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IToDoService/UpdateDependentTasksResponse" message="tns:IToDoService_UpdateDependentTasks_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IToDoService" type="tns:IToDoService">
@@ -42,6 +52,15 @@
     </wsdl:operation>
     <wsdl:operation name="SaveToDoItem">
       <soap:operation soapAction="http://tempuri.org/IToDoService/SaveToDoItem" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateDependentTasks">
+      <soap:operation soapAction="http://tempuri.org/IToDoService/UpdateDependentTasks" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

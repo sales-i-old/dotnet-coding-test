@@ -11,7 +11,7 @@ namespace ToDo.Entity
         private string _title;
         private string _description;
         private bool _complete;
-        private int _parentid;
+        private string _parentid;
         private int _orderid;
 
         
@@ -40,7 +40,7 @@ namespace ToDo.Entity
             set { _complete = value; }
         }
 
-        public int ParentId
+        public string ParentId
         {
             get { return _parentid; }
             set { _parentid = value; }

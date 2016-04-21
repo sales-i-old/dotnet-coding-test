@@ -56,5 +56,19 @@ namespace ToDo.WCF
                 throw ex;
             }
         }
+
+        public void UpdateDependentTasks(Contract.ToDoItemContract toDoItemContract)
+        {
+            try
+            {
+                ToDoItemEntityBuilder builder = new ToDoItemEntityBuilder();
+
+                ToDoItemService.UpdateDependentTasks(builder.Build(toDoItemContract));
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

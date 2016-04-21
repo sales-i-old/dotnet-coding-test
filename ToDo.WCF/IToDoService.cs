@@ -18,6 +18,9 @@ namespace ToDo.WCF
         [OperationContract]
         string SaveToDoItem(Contract.ToDoItemContract toDoItem);
 
+        [OperationContract]
+        void UpdateDependentTasks(Contract.ToDoItemContract toDoItem);
+
     }
 
 }
