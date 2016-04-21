@@ -5,6 +5,7 @@ using System.Text;
 using System.Data;
 using System.Data.SqlClient;
 using ToDo.Entity;
+using ToDo.DA.Mapper;
 
 namespace ToDo.DA.Mapper.MsSql
 {
@@ -49,7 +50,7 @@ namespace ToDo.DA.Mapper.MsSql
                             item.Title = reader.GetString(reader.GetOrdinal("title"));
                             item.Description = reader.GetString(reader.GetOrdinal("description"));
                             item.Complete = reader.GetBoolean(reader.GetOrdinal("complete"));
-                            item.ParentId = reader.GetInt32(reader.GetOrdinal("parentid"));
+                            item.ParentId = GuidToString(reader.GetNullableGuid(reader.GetOrdinal("parentid")));
                             item.OrderId = reader.GetInt32(reader.GetOrdinal("orderid"));
 
                             items.Add(item);
@@ -69,9 +70,14 @@ namespace ToDo.DA.Mapper.MsSql
             return items;
         }
 
+        private string GuidToString(Guid guid)
+        {
+            return guid == Guid.Empty ? String.Empty : guid.ToString();
+        }
+
         public string Insert(IToDoItem toDoItem)
         {
-            string sql = "INSERT INTO ToDoItems (id, title, description, complete) OUTPUT INSERTED.id VALUES (NEWID(), @title, @description, 0)";
+            string sql = "INSERT INTO ToDoItems (id, title, description, complete, parentid, orderid) OUTPUT INSERTED.id VALUES (NEWID(), @title, @description, 0, @parentid, ISNULL((select max(OrderID) + 1 from ToDoItems),0))";
 
             // access the database and retrieve data
             using (IDbConnection conn = GetConnection())
@@ -81,9 +87,20 @@ namespace ToDo.DA.Mapper.MsSql
 
                 IDbDataParameter title = new SqlParameter("@title", toDoItem.Title);
                 IDbDataParameter description = new SqlParameter("@description", toDoItem.Description);
+                IDbDataParameter parentid;
+                if(String.IsNullOrEmpty(toDoItem.ParentId))
+                {
+                    parentid = new SqlParameter("@parentid", DBNull.Value);
+                }
+                else
+                {
+                    parentid = new SqlParameter("@parentid", toDoItem.ParentId);
+                }
+                
 
                 command.Parameters.Add(title);
                 command.Parameters.Add(description);
+                command.Parameters.Add(parentid);
 
                 try
                 {
@@ -129,6 +146,51 @@ namespace ToDo.DA.Mapper.MsSql
                 command.Parameters.Add(title);
                 command.Parameters.Add(description);
                 command.Parameters.Add(complete);
+                command.Parameters.Add(id);
+
+                try
+                {
+                    conn.Open();
+
+                    int result = command.ExecuteNonQuery();
+                    return (result > 0);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+        }
+
+        public bool UpdateDependentTasks(IToDoItem toDoItem)
+        {
+            string sql = @" UPDATE ToDoItems 
+                            SET parentid = @parentid
+                            WHERE id = @id";
+
+            // access the database and retrieve data
+            using (IDbConnection conn = GetConnection())
+            {
+                IDbCommand command = conn.CreateCommand();
+                command.CommandText = sql;
+                Guid guid;
+                IDbDataParameter parentid;
+                if (Guid.TryParse(toDoItem.ParentId, out guid))
+                {
+                    parentid = new SqlParameter("@parentid", guid);
+                }
+                else
+                {
+                    parentid = new SqlParameter("@parentid", DBNull.Value);
+                }
+
+                IDbDataParameter id = new SqlParameter("@id", toDoItem.Id);
+
+                command.Parameters.Add(parentid);
                 command.Parameters.Add(id);
 
                 try

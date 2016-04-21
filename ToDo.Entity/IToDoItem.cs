@@ -7,7 +7,7 @@ namespace ToDo.Entity
         string Description { get; set; }
         string Id { get; set; }
         string Title { get; set; }
-        int ParentId { get; set; }
+        string ParentId { get; set; }
         int OrderId { get; set; }
     }
 }

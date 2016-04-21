@@ -50,6 +50,21 @@ namespace ToDo.Core.Service
             }
         }
 
+        public string UpdateDependentTasks(IToDoItem toDoItem)
+        {
+            try
+            {
+                if (_toDoMapper.UpdateDependentTasks(toDoItem))
+                    return toDoItem.Id;
+                else
+                    throw new Exception("No todo items updated");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         private string Insert(IToDoItem toDoItem)
         {
             try

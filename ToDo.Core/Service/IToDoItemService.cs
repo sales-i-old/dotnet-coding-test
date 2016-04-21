@@ -9,5 +9,7 @@ namespace ToDo.Core.Service
         IList<IToDoItem> GetTodoItems(string idFilter = "");
 
         string Save(IToDoItem toDoItem);
+
+        string UpdateDependentTasks(IToDoItem toDoItem);
     }
 }

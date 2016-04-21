@@ -44,6 +44,7 @@
     <Compile Include="Enumerations.cs" />
     <Compile Include="Mapper\IToDoItemMapper.cs" />
     <Compile Include="Mapper\MapperFactory.cs" />
+    <Compile Include="Mapper\MsSql\ExtensionMethods.cs" />
     <Compile Include="Mapper\MsSql\MsSqlMapper.cs" />
     <Compile Include="Mapper\MsSql\MsSqlToDoItemMapper.cs" />
     <Compile Include="MsSqlConnection.cs" />

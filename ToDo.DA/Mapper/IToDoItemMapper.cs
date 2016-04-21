@@ -11,5 +11,7 @@ namespace ToDo.DA.Mapper
         string Insert(IToDoItem item);
 
         bool Update(IToDoItem item);
+
+        bool UpdateDependentTasks(IToDoItem toDoItem);
     }
 }
