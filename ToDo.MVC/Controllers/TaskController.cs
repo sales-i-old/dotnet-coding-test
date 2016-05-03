@@ -13,6 +13,8 @@ namespace ToDo.MVC.Controllers
 
         public ActionResult Index()
         {
+            // Set the model to list of task id's so they can be added to a drop down box
+
             return View();
         }
 

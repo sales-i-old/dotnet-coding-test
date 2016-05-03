@@ -13,8 +13,22 @@ namespace ToDo.DA.Mapper.MsSql
     {
         public IDbConnection GetConnection()
         {
+
+            var dbConfigSection = ConfigurationManager.AppSettings["DatabaseConnection"];
+
+            if (dbConfigSection == null)
+                throw new ApplicationException("No DatabaseConnection app setting defined");
+
+            var dbConnection = ConfigurationManager.ConnectionStrings[dbConfigSection];
+            
+            if (dbConnection == null)
+                throw new ApplicationException("No database configuration defined in web.config");
+           
+
+
+
             // TODO: Get connection string from the config. A valid connection string already exists in the relevant config
-            return new SqlConnection("Data Source=(LocalDB)\v11.0;");
+            return new SqlConnection(dbConnection.ConnectionString);
         }
     }
 }
