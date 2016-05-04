@@ -1,11 +1,12 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage" %>
+﻿<%@ Page Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<ToDo.MVC.Models.HomeViewModel>" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
     List
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <h2><%: ViewData["Message"] %></h2>
+
+    <h2><%: @Model.Message %></h2>
 
     <% using (Html.BeginForm("Create", "Task"))
        { %>
@@ -15,6 +16,7 @@
         <br />
         <%= Html.TextBox("TaskDescription") %>
         <br />
+        <%= Html.DropDownListFor( x=> x.SelectedParent, Model.AvailableParents, "Please select optional parent task") %>
         <br />
         <input type="submit" value="Save" />
        </div>
@@ -25,7 +27,7 @@
 
     <div>
     <ul>
-    <% foreach (var item in ViewData["Tasks"] as List<ToDo.MVC.ToDoService.ToDoItemContract>) {%>
+    <% foreach (var item in @Model.TodoItems) {%>
 
     <li>
     <span style="font-weight: bold;"><%=Html.ActionLink(item.Title, "Details", "Task", null, null, "", new { id = item.Id }, null)%></span>

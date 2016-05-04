@@ -42,13 +42,20 @@ namespace ToDo.DA.Mapper.MsSql
 
                     using (IDataReader reader = command.ExecuteReader())
                     {
+                        var ordId = reader.GetOrdinal("id");
+                        var ordParentId = reader.GetOrdinal("idParent");
+                        var ordTitle = reader.GetOrdinal("title");
+                        var ordDesc = reader.GetOrdinal("description");
+                        var ordComplete = reader.GetOrdinal("complete");
+
                         while (reader.Read())
                         {
                             IToDoItem item = new ToDoItem();
-                            item.Id = reader.GetGuid(reader.GetOrdinal("id")).ToString();
-                            item.Title = reader.GetString(reader.GetOrdinal("title"));
-                            item.Description = reader.GetString(reader.GetOrdinal("description"));
-                            item.Complete = reader.GetBoolean(reader.GetOrdinal("complete"));
+                            item.Id = reader.GetGuid(ordId).ToString();
+                            item.ParentId =  reader.IsDBNull(ordParentId) ? null : reader.GetGuid(ordParentId).ToString();
+                            item.Title = reader.GetString(ordTitle);
+                            item.Description = reader.GetString(ordDesc);
+                            item.Complete = reader.GetBoolean(ordComplete);
 
                             items.Add(item);
                         }
@@ -69,7 +76,7 @@ namespace ToDo.DA.Mapper.MsSql
 
         public string Insert(IToDoItem toDoItem)
         {
-            string sql = "INSERT INTO ToDoItems (id, title, description, complete) OUTPUT INSERTED.id VALUES (NEWID(), @title, @description, 0)";
+            string sql = "INSERT INTO ToDoItems (id, idParent, title, description, complete) OUTPUT INSERTED.id VALUES (NEWID(), @idParent, @title, @description, 0)";
 
             // access the database and retrieve data
             using (IDbConnection conn = GetConnection())
@@ -80,8 +87,11 @@ namespace ToDo.DA.Mapper.MsSql
                 IDbDataParameter title = new SqlParameter("@title", toDoItem.Title);
                 IDbDataParameter description = new SqlParameter("@description", toDoItem.Description);
 
+                IDbDataParameter idParent = new SqlParameter("@idParent", String.IsNullOrEmpty(toDoItem.ParentId) ? DBNull.Value : (object)new Guid(toDoItem.ParentId));
+
                 command.Parameters.Add(title);
                 command.Parameters.Add(description);
+                command.Parameters.Add(idParent);
 
                 try
                 {
@@ -108,7 +118,8 @@ namespace ToDo.DA.Mapper.MsSql
         public bool Update(IToDoItem toDoItem)
         {
             string sql = @" UPDATE ToDoItems 
-                            SET title = @title
+                            SET idParent = @idParent
+                            , title = @title
                             , description = @description
                             , complete = @complete
                             WHERE id = @id";
@@ -123,11 +134,13 @@ namespace ToDo.DA.Mapper.MsSql
                 IDbDataParameter description = new SqlParameter("@description", toDoItem.Description);
                 IDbDataParameter complete = new SqlParameter("@complete", toDoItem.Complete);
                 IDbDataParameter id = new SqlParameter("@id", toDoItem.Id);
+                IDbDataParameter idParent = new SqlParameter("@idParent", String.IsNullOrEmpty(toDoItem.ParentId) ? DBNull.Value : (object)new Guid(toDoItem.ParentId));
 
                 command.Parameters.Add(title);
                 command.Parameters.Add(description);
                 command.Parameters.Add(complete);
                 command.Parameters.Add(id);
+                command.Parameters.Add(idParent);
 
                 try
                 {

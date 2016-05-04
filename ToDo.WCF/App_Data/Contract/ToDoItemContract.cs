@@ -14,6 +14,10 @@ namespace ToDo.WCF.Contract
         { get; set; }
 
         [DataMember]
+        public string ParentId
+        { get; set; }
+
+        [DataMember]
         public string Title
         { get; set; }
 

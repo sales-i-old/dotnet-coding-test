@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using ToDo.MVC.Models;
 
 namespace ToDo.MVC.Controllers
 {
@@ -25,9 +26,12 @@ namespace ToDo.MVC.Controllers
         {
             ToDoService.ToDoServiceClient service = new ToDoService.ToDoServiceClient();
 
-            List<ToDoService.ToDoItemContract> items = service.GetToDoItems("").ToList();
+            var items = service.GetToDoItems("").ToList();
+            var currentItem = items.FirstOrDefault(x => x.Id == id);
 
-            return View(items.Where(x => x.Id == id).FirstOrDefault());
+            var vm = new TaskViewModel(currentItem, items);
+
+            return View(vm);
         }
 
         //
@@ -51,6 +55,7 @@ namespace ToDo.MVC.Controllers
                 ToDoService.ToDoItemContract task = new ToDoService.ToDoItemContract();
                 task.Title = collection.Get("TaskName");
                 task.Description = collection.Get("TaskDescription");
+                task.ParentId = collection.Get("SelectedParent");
 
                 service.SaveToDoItem(task);
 
@@ -82,11 +87,12 @@ namespace ToDo.MVC.Controllers
 
                 ToDoService.ToDoItemContract task = new ToDoService.ToDoItemContract();
                 task.Id = id;
-                task.Title = collection.Get("Title");
-                task.Description = collection.Get("Description");
+                task.ParentId = collection.Get("SelectedParent");
+                task.Title = collection.Get("TodoItem.Title");
+                task.Description = collection.Get("TodoItem.Description");
 
                 // MVC sends a checkbox value grouped with a hidden field, take the first result
-                string complete = collection.Get("Complete").Split(',')[0];
+                string complete = collection.Get("TodoItem.Complete").Split(',')[0];
 
                 task.Complete = Convert.ToBoolean(complete);
 

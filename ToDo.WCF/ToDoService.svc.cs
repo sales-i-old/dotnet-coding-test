@@ -44,17 +44,10 @@ namespace ToDo.WCF
         }
 
         public string SaveToDoItem(Contract.ToDoItemContract toDoItemContract)
-        {
-            try
-            {
-                ToDoItemEntityBuilder builder = new ToDoItemEntityBuilder();
-                
-                return ToDoItemService.Save(builder.Build(toDoItemContract));
-            }
-            catch(Exception ex)
-            {
-                throw ex;
-            }
+        {               
+            ToDoItemEntityBuilder builder = new ToDoItemEntityBuilder();                                
+            return ToDoItemService.Save(builder.Build(toDoItemContract));
+
         }
     }
 }
