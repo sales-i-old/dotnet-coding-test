@@ -11,13 +11,20 @@ namespace ToDo.Entity
         private string _title;
         private string _description;
         private bool _complete;
+        private string _dependentOnId;
 
-        
+
 
         public string Id
         {
             get { return _id; }
             set { _id = value; }
+        }
+
+        public string DependentOnId
+        {
+            get { return _dependentOnId; }
+            set { _dependentOnId = value; }
         }
 
         public string Title

@@ -5,7 +5,6 @@ using System.Text;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Configuration;
 
 
 namespace ToDo.DA.Mapper.MsSql
@@ -15,8 +14,7 @@ namespace ToDo.DA.Mapper.MsSql
         public IDbConnection GetConnection()
         {
             // TODO: Get connection string from the config. A valid connection string already exists in the relevant config
-            string conString = System.Configuration.ConfigurationManager.
-    ConnectionStrings["ToDoDatabase"].ConnectionString;
+            string conString = ConfigurationManager.ConnectionStrings["ToDoDatabase"].ConnectionString;
 
             return new SqlConnection(conString);
         }

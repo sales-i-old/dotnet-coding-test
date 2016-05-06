@@ -10,11 +10,14 @@ namespace ToDo.WCF.Contract.Builder
     {
         public IToDoItem Build(ToDoItemContract toDoItemContract)
         {
-            IToDoItem toDoItem = new ToDoItem();
-            toDoItem.Id = toDoItemContract.Id;
-            toDoItem.Title = toDoItemContract.Title;
-            toDoItem.Description = toDoItemContract.Description;
-            toDoItem.Complete = toDoItemContract.Complete;
+            IToDoItem toDoItem = new ToDoItem
+            {
+                Id = toDoItemContract.Id,
+                Title = toDoItemContract.Title,
+                Description = toDoItemContract.Description,
+                Complete = toDoItemContract.Complete,
+                DependentOnId = toDoItemContract.DependentOnId
+            };
 
             return toDoItem;
         }

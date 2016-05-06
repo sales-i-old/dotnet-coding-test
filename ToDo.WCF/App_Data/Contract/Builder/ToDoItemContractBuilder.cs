@@ -12,12 +12,15 @@ namespace ToDo.WCF.Contract.Builder
         { }
 
         public ToDoItemContract Build(IToDoItem toDoItemEntity)
-        {          
-            ToDoItemContract toDoItemContract = new ToDoItemContract();
-            toDoItemContract.Id = toDoItemEntity.Id;
-            toDoItemContract.Title = toDoItemEntity.Title;
-            toDoItemContract.Description = toDoItemEntity.Description;
-            toDoItemContract.Complete = toDoItemEntity.Complete;
+        {
+            ToDoItemContract toDoItemContract = new ToDoItemContract
+            {
+                Id = toDoItemEntity.Id,
+                Title = toDoItemEntity.Title,
+                Description = toDoItemEntity.Description,
+                Complete = toDoItemEntity.Complete,
+                DependentOnId = toDoItemEntity.DependentOnId
+            };
 
             return toDoItemContract;
         }

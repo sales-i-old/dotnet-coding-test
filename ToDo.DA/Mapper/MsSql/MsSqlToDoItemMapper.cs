@@ -44,11 +44,20 @@ namespace ToDo.DA.Mapper.MsSql
                     {
                         while (reader.Read())
                         {
-                            IToDoItem item = new ToDoItem();
-                            item.Id = reader.GetGuid(reader.GetOrdinal("id")).ToString();
-                            item.Title = reader.GetString(reader.GetOrdinal("title"));
-                            item.Description = reader.GetString(reader.GetOrdinal("description"));
-                            item.Complete = reader.GetBoolean(reader.GetOrdinal("complete"));
+                            IToDoItem item = new ToDoItem
+                            {
+                                Id = reader.GetGuid(reader.GetOrdinal("id")).ToString(),
+                                Title = reader.GetString(reader.GetOrdinal("title")),
+                                Description = reader.GetString(reader.GetOrdinal("description")),
+                                Complete = reader.GetBoolean(reader.GetOrdinal("complete"))
+                            };
+
+                            int dependentFieldIndex = reader.GetOrdinal("dependentOnId");
+                            //check for Db null before mapping nullable uniqueidentifier
+                            if (!reader.IsDBNull(dependentFieldIndex))
+                            {
+                                item.DependentOnId = reader.GetGuid(dependentFieldIndex).ToString();
+                            }
 
                             items.Add(item);
                         }
@@ -69,7 +78,7 @@ namespace ToDo.DA.Mapper.MsSql
 
         public string Insert(IToDoItem toDoItem)
         {
-            string sql = "INSERT INTO ToDoItems (id, title, description, complete) OUTPUT INSERTED.id VALUES (NEWID(), @title, @description, 0)";
+            string sql = "INSERT INTO ToDoItems (id, title, description, complete, dependentOnId) OUTPUT INSERTED.id VALUES (NEWID(), @title, @description, 0, @dependentOnId)";
 
             // access the database and retrieve data
             using (IDbConnection conn = GetConnection())
@@ -79,9 +88,20 @@ namespace ToDo.DA.Mapper.MsSql
 
                 IDbDataParameter title = new SqlParameter("@title", toDoItem.Title);
                 IDbDataParameter description = new SqlParameter("@description", toDoItem.Description);
+                IDbDataParameter dependentOnId;
+
+                if (!String.IsNullOrEmpty(toDoItem.DependentOnId))
+                {
+                    dependentOnId = new SqlParameter("@dependentOnId", toDoItem.DependentOnId);
+                }
+                else
+                {
+                    dependentOnId = new SqlParameter("@dependentOnId", DBNull.Value);
+                }
 
                 command.Parameters.Add(title);
                 command.Parameters.Add(description);
+                command.Parameters.Add(dependentOnId);                
 
                 try
                 {
@@ -107,29 +127,31 @@ namespace ToDo.DA.Mapper.MsSql
 
         public bool Update(IToDoItem toDoItem)
         {
-//            string sql = @" UPDATE ToDoItems 
-//                            SET title = @title
-//                            , description = @description
-//                            , complete = @complete
-//                            WHERE id = @ids";
+            //would use sprocs here instead of hardcoded sql commands in code
+            //or code-first EF and query with linq for smaller apps like this.
+            string sql;
 
-            string sql = String.Format("UPDATE [todo_test].[dbo].[ToDoItems] set description = '{0}', Title = '{1}' WHERE ID = '{2}'", toDoItem.Description, toDoItem.Title, toDoItem.Id);
+            string completeBit = "0";
+
+            if(toDoItem.Complete)
+            {
+                completeBit = "1";
+            }
+
+            if (String.IsNullOrEmpty(toDoItem.DependentOnId))
+            {
+                sql = String.Format("UPDATE [todo_test].[dbo].[ToDoItems] set description = '{0}', Title = '{1}', Complete = '{2}', DependentOnId = NULL WHERE ID = '{3}'", toDoItem.Description, toDoItem.Title, completeBit, toDoItem.Id);
+            }
+            else
+            {
+                sql = String.Format("UPDATE [todo_test].[dbo].[ToDoItems] set description = '{0}', Title = '{1}', Complete = '{2}', DependentOnId = '{3}' WHERE ID = '{4}'", toDoItem.Description, toDoItem.Title, completeBit, toDoItem.DependentOnId, toDoItem.Id);
+            }
 
             // access the database and retrieve data
             using (IDbConnection conn = GetConnection())
             {
                 IDbCommand command = conn.CreateCommand();
                 command.CommandText = sql;
-
-                //IDbDataParameter title = new SqlParameter("@title", toDoItem.Title);
-                //IDbDataParameter description = new SqlParameter("@description", toDoItem.Description);
-                //IDbDataParameter complete = new SqlParameter("@complete", toDoItem.Complete);
-                //IDbDataParameter id = new SqlParameter("@id", toDoItem.Id);
-
-                //command.Parameters.Add(title);
-                //command.Parameters.Add(description);
-                //command.Parameters.Add(complete);
-                //command.Parameters.Add(id);
 
                 try
                 {
