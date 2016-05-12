@@ -11,9 +11,17 @@ namespace ToDo.DA.Mapper.MsSql
 {
     public abstract class MsSqlMapper
     {
+        private MsSqlConnection connection;
+
+        public MsSqlMapper()
+        {
+            connection = new MsSqlConnection();
+        }
+
         public IDbConnection GetConnection()
         {
-            return new SqlConnection(ConfigurationManager.ConnectionStrings["ToDoDatabase"].ToString());
+            // Get connection string from the config. A valid connection string already exists in the relevant config
+            return connection.GetConnection();
         }
     }
 }

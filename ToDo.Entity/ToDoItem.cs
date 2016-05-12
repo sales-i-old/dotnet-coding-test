@@ -11,7 +11,7 @@ namespace ToDo.Entity
         private string _title;
         private string _description;
         private bool _complete;
-
+        private string _parentid;
         
 
         public string Id
@@ -36,6 +36,12 @@ namespace ToDo.Entity
         {
             get { return _complete; }
             set { _complete = value; }
+        }
+
+        public string ParentId
+        {
+            get { return _parentid; }
+            set { _parentid = value; }
         }
     }
 }
