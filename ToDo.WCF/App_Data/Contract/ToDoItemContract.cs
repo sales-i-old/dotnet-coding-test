@@ -24,5 +24,14 @@ namespace ToDo.WCF.Contract
         [DataMember]
         public bool Complete
         { get; set; }
+
+        // ANDREI: set the parent task properties
+        [DataMember]
+        public string ParentTaskId
+        { get; set; }
+
+        [DataMember]
+        public string ParentTaskTitle
+        { get; set; }
     }
 }

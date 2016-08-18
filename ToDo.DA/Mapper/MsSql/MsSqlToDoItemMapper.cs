@@ -18,7 +18,10 @@ namespace ToDo.DA.Mapper.MsSql
         public IList<IToDoItem> GetToDoItems(string idFilter = "")
         {
             // sql to execute
-            string sql = "select * from ToDoItems";
+            // ANDREI: changed the sql query
+            string sql = @"SELECT a.id, a.title, a.[description], a.complete, isnull(b.title, 'N/A') as parent_task_title
+                            from ToDoItems a
+                            left join ToDoItems b on a.parent_task_id = b.id";
 
             // instantiate list to populate
             List<IToDoItem> items = new List<IToDoItem>();
@@ -32,7 +35,7 @@ namespace ToDo.DA.Mapper.MsSql
                 // do we have an id filter?
                 if (!string.IsNullOrEmpty(idFilter))
                 {
-                    sql += " where id = '@id'";
+                    sql += " where a.id = '@id'";
                     command.Parameters.Add(new SqlParameter("@id", idFilter));
                 }
 
@@ -49,6 +52,8 @@ namespace ToDo.DA.Mapper.MsSql
                             item.Title = reader.GetString(reader.GetOrdinal("title"));
                             item.Description = reader.GetString(reader.GetOrdinal("description"));
                             item.Complete = reader.GetBoolean(reader.GetOrdinal("complete"));
+                            // ANDREI: set a parent task title property
+                            item.ParentTaskTitle = reader.GetString(reader.GetOrdinal("parent_task_title"));
 
                             items.Add(item);
                         }
@@ -69,7 +74,8 @@ namespace ToDo.DA.Mapper.MsSql
 
         public string Insert(IToDoItem toDoItem)
         {
-            string sql = "INSERT INTO ToDoItems (id, title, description, complete) OUTPUT INSERTED.id VALUES (NEWID(), @title, @description, 0)";
+            // ANDREI: the changed sql query
+            string sql = "INSERT INTO ToDoItems (id, title, description, complete, parent_task_id) OUTPUT INSERTED.id VALUES (newid(), @title, @description, 0, null)";
 
             // access the database and retrieve data
             using (IDbConnection conn = GetConnection())
@@ -107,10 +113,12 @@ namespace ToDo.DA.Mapper.MsSql
 
         public bool Update(IToDoItem toDoItem)
         {
+            // ANDREI: changed the sql query
             string sql = @" UPDATE ToDoItems 
                             SET title = @title
                             , description = @description
                             , complete = @complete
+                            , parent_task_id = @parent_task_id
                             WHERE id = @id";
 
             // access the database and retrieve data
@@ -123,11 +131,14 @@ namespace ToDo.DA.Mapper.MsSql
                 IDbDataParameter description = new SqlParameter("@description", toDoItem.Description);
                 IDbDataParameter complete = new SqlParameter("@complete", toDoItem.Complete);
                 IDbDataParameter id = new SqlParameter("@id", toDoItem.Id);
+                // ANDREI: set a parent task id property
+                IDbDataParameter parentTaskId = new SqlParameter("@parent_task_id", toDoItem.ParentTaskId);
 
                 command.Parameters.Add(title);
                 command.Parameters.Add(description);
                 command.Parameters.Add(complete);
                 command.Parameters.Add(id);
+                command.Parameters.Add(parentTaskId);
 
                 try
                 {

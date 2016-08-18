@@ -9,60 +9,76 @@ namespace ToDo.Web
 {
     public partial class Default : System.Web.UI.Page
     {
+        private List<ToDoService.ToDoItemContract> _toDoItems;
+        private ToDoService.ToDoServiceClient _client;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
             {
-                LoadTasks();                
+                LoadTasks();
             }
         }
 
         private void LoadTasks()
         {
             // get the todo list items
-            ToDoService.ToDoServiceClient client = new ToDoService.ToDoServiceClient();
+            _client = new ToDoService.ToDoServiceClient();
 
             try
             {
-                List<ToDoService.ToDoItemContract> toDoItems = client.GetToDoItems("").ToList();
-                dlTasks.DataSource = toDoItems;
+                _toDoItems = _client.GetToDoItems("").ToList();
+                dlTasks.DataSource = _toDoItems;
                 dlTasks.DataBind();
 
-                client.Close();
+                _client.Close();
             }
             catch (Exception ex)
             {
-                // TODO: Log error
-                client.Abort();
+                // ANDREI: logged an exeption into ErrorLog folder
+                ErrorLog.Instance.WriteLog(ex);
+                _client.Abort();
             }
         }
 
         protected void btn_AddTask_Click(object sender, EventArgs e)
         {
-            ToDoService.ToDoItemContract toDoItem = new ToDoService.ToDoItemContract();
-            toDoItem.Title = txtTask.Text;
-            toDoItem.Description = txtDescription.Text;
+            // ANDREI: validation should be on the client, make check only here for now
+            if (string.IsNullOrEmpty(txtTask.Text) || string.IsNullOrEmpty(txtDescription.Text)) return;
+            // ANDREI: added a session mechanism to prevent the insert of the same task and/or insert on the page reload
+            if (!IsPostBack) return;
+            if (Session["taskAdded"] != null) return;
+            var toDoItem = new ToDoService.ToDoItemContract
+            {
+                Title = txtTask.Text,
+                Description = txtDescription.Text
+            };
 
             Save(toDoItem);
 
+            txtTask.Text = "";
+            txtDescription.Text = "";
+
             // update the UI
             LoadTasks();
+            Session.Add("taskAdded", true);
         }
 
         private string Save(ToDoService.ToDoItemContract toDoItemContract)
         {
             // get the todo list items
-            ToDoService.ToDoServiceClient client = new ToDoService.ToDoServiceClient();
-            
+            _client = new ToDoService.ToDoServiceClient();
+
             try
             {
                 // save the new task
-                return client.SaveToDoItem(toDoItemContract);
+                return _client.SaveToDoItem(toDoItemContract);
             }
             catch (Exception ex)
             {
-                client.Abort();
-                // TODO: Client side save error message
+                _client.Abort();
+                // ANDREI: logged an exeption into ErrorLog folder
+                ErrorLog.Instance.WriteLog(ex);
                 return "";
             }
         }
@@ -75,11 +91,20 @@ namespace ToDo.Web
 
         protected void dlTasks_UpdateCommand(Object sender, DataListCommandEventArgs e)
         {
-            ToDoService.ToDoItemContract toDoItem = new ToDoService.ToDoItemContract();
-            toDoItem.Id = e.CommandArgument.ToString();
-            toDoItem.Title = (e.Item.FindControl("txtUpdateTitle") as TextBox).Text;
-            toDoItem.Description = (e.Item.FindControl("txtUpdateDescription") as TextBox).Text;
-            toDoItem.Complete = (e.Item.FindControl("chkComplete") as CheckBox).Checked;
+            var title = (e.Item.FindControl("txtUpdateTitle") as TextBox).Text;
+            var description = (e.Item.FindControl("txtUpdateDescription") as TextBox).Text;
+            // ANDREI: validation should be on the client, make check only here for now
+            if (string.IsNullOrEmpty(title) || string.IsNullOrEmpty(description)) return;
+
+            var toDoItem = new ToDoService.ToDoItemContract
+            {
+                Id = e.CommandArgument.ToString(),
+                Title = title,
+                Description = description,
+                Complete = (e.Item.FindControl("chkComplete") as CheckBox).Checked,
+                // ANDREI: set a parent task id property
+                ParentTaskId = (e.Item.FindControl("cboParentTask") as DropDownList).SelectedValue
+            };
 
             Save(toDoItem);
 
@@ -88,6 +113,35 @@ namespace ToDo.Web
 
             // update the UI
             LoadTasks();
+        }
+
+
+        protected void dlTasks_ItemDataBound(object sender, DataListItemEventArgs e)
+        {
+            // ANDREI : populated a parent task dropdown list in edit mode
+            if (e.Item.ItemType != ListItemType.EditItem) return;
+
+            var ddl = e.Item.FindControl("cboParentTask") as DropDownList;
+            if (ddl == null) return;
+
+            try
+            {
+                ddl.DataSource = _toDoItems;
+                ddl.DataBind();
+
+                _client.Close();
+            }
+            catch (Exception ex)
+            {
+                // ANDREI: logged an exeption into ErrorLog folder
+                ErrorLog.Instance.WriteLog(ex);
+                _client.Abort();
+            }
+        }
+
+        protected void txtTask_TextChanged(object sender, EventArgs e)
+        {
+            Session.Remove("taskAdded");
         }
     }
 }

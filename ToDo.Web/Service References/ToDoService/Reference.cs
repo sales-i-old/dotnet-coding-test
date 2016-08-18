@@ -32,6 +32,12 @@ namespace ToDo.Web.ToDoService {
         private string IdField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ParentTaskIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ParentTaskTitleField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string TitleField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
@@ -79,6 +85,32 @@ namespace ToDo.Web.ToDoService {
                 if ((object.ReferenceEquals(this.IdField, value) != true)) {
                     this.IdField = value;
                     this.RaisePropertyChanged("Id");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ParentTaskId {
+            get {
+                return this.ParentTaskIdField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ParentTaskIdField, value) != true)) {
+                    this.ParentTaskIdField = value;
+                    this.RaisePropertyChanged("ParentTaskId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ParentTaskTitle {
+            get {
+                return this.ParentTaskTitleField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ParentTaskTitleField, value) != true)) {
+                    this.ParentTaskTitleField = value;
+                    this.RaisePropertyChanged("ParentTaskTitle");
                 }
             }
         }

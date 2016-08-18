@@ -18,6 +18,9 @@ namespace ToDo.WCF.Contract.Builder
             toDoItemContract.Title = toDoItemEntity.Title;
             toDoItemContract.Description = toDoItemEntity.Description;
             toDoItemContract.Complete = toDoItemEntity.Complete;
+            // ANDREI: mapped the parent task properties
+            toDoItemContract.ParentTaskId = toDoItemEntity.ParentTaskId;
+            toDoItemContract.ParentTaskTitle = toDoItemEntity.ParentTaskTitle;
 
             return toDoItemContract;
         }
