@@ -92,7 +92,7 @@ namespace ToDo.MVC.Controllers
  
                 return RedirectToAction("Index", "Home");
             }
-            catch
+            catch (Exception ex)
             {
                 return View("Index", "Home");
             }

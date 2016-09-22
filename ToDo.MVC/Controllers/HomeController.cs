@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using ToDo.MVC.Models;
 
 namespace ToDo.MVC.Controllers
 {
     [HandleError]
     public class HomeController : Controller
     {
+        [HttpGet]
         public ActionResult Index()
         {
             ViewData["Message"] = "Welcome to ASP.NET MVC!";
@@ -20,7 +22,14 @@ namespace ToDo.MVC.Controllers
 
             ViewData["Tasks"] = tasks;
 
-            return View();
+            var task = new TaskModel();
+
+            return View(task);
+        }
+
+        public ActionResult SaveTask(string taskName, string taskDescription)
+        {
+            return View("Index");
         }
 
         public ActionResult About()

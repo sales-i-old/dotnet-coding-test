@@ -49,7 +49,13 @@ namespace ToDo.WCF
             {
                 ToDoItemEntityBuilder builder = new ToDoItemEntityBuilder();
                 
-                return ToDoItemService.Save(builder.Build(toDoItemContract));
+                var objectToSave = builder.Build(toDoItemContract);
+
+                objectToSave.Description = toDoItemContract.Description;
+                objectToSave.Title = toDoItemContract.Title;
+                objectToSave.Complete = toDoItemContract.Complete;
+
+                return ToDoItemService.Save(objectToSave);
             }
             catch(Exception ex)
             {

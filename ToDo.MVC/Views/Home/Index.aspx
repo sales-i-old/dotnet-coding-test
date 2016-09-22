@@ -11,11 +11,12 @@
        { %>
 
        <div>
-        <%= Html.TextBox("TaskName") %>
+        Task Name: <%= Html.TextBox("TaskName") %>
         <br />
-        <%= Html.TextBox("TaskDescription") %>
+        Task Description: <%= Html.TextBox("TaskDescription") %>
         <br />
         <input type="submit" value="Save" />
+
        </div>
 
 
