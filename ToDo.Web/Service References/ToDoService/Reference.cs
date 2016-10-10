@@ -26,6 +26,12 @@ namespace ToDo.Web.ToDoService {
         private bool CompleteField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DependantTaskIDField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DependantTaskTitleField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string DescriptionField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -53,6 +59,32 @@ namespace ToDo.Web.ToDoService {
                 if ((this.CompleteField.Equals(value) != true)) {
                     this.CompleteField = value;
                     this.RaisePropertyChanged("Complete");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string DependantTaskID {
+            get {
+                return this.DependantTaskIDField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DependantTaskIDField, value) != true)) {
+                    this.DependantTaskIDField = value;
+                    this.RaisePropertyChanged("DependantTaskID");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string DependantTaskTitle {
+            get {
+                return this.DependantTaskTitleField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DependantTaskTitleField, value) != true)) {
+                    this.DependantTaskTitleField = value;
+                    this.RaisePropertyChanged("DependantTaskTitle");
                 }
             }
         }
@@ -115,6 +147,9 @@ namespace ToDo.Web.ToDoService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IToDoService/SaveToDoItem", ReplyAction="http://tempuri.org/IToDoService/SaveToDoItemResponse")]
         string SaveToDoItem(ToDo.Web.ToDoService.ToDoItemContract toDoItem);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IToDoService/GetAllDependantTasks", ReplyAction="http://tempuri.org/IToDoService/GetAllDependantTasksResponse")]
+        string[] GetAllDependantTasks(string id);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -150,6 +185,10 @@ namespace ToDo.Web.ToDoService {
         
         public string SaveToDoItem(ToDo.Web.ToDoService.ToDoItemContract toDoItem) {
             return base.Channel.SaveToDoItem(toDoItem);
+        }
+        
+        public string[] GetAllDependantTasks(string id) {
+            return base.Channel.GetAllDependantTasks(id);
         }
     }
 }

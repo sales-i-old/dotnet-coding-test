@@ -7,10 +7,13 @@ namespace ToDo.Entity
 {
     public class ToDoItem : IToDoItem
     {
+       
         private string _id;
         private string _title;
         private string _description;
         private bool _complete;
+        private string _deptaskID; 
+        private string _deptaskTitle; 
 
         
 
@@ -36,6 +39,18 @@ namespace ToDo.Entity
         {
             get { return _complete; }
             set { _complete = value; }
+        }
+
+        public string DependantTaskID
+        {
+            get { return _deptaskID; }
+            set { _deptaskID = value; }
+        }
+
+        public string DependantTaskTitle
+        {
+            get { return _deptaskTitle; }
+            set { _deptaskTitle = value; }
         }
     }
 }
