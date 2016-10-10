@@ -49,12 +49,13 @@ namespace ToDo.WCF
                 Contract.ToDoItemContract toDoItemContract = builder.Build(item);
 
                 results.Add(toDoItemContract);
+                
             }
 
             return results;
         }
 
-
+        [Obsolete("Datatable not serializable; use GetToDoItems!",true)]
         public List<string> GetAllDependantTasks(string id)
         {
             DataTable dt = new DataTable();
