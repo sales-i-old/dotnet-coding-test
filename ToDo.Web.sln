@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDo.Web", "ToDo.Web\ToDo.Web.csproj", "{2B5B412C-923B-485C-99D4-538310398946}"
 	ProjectSection(ProjectDependencies) = postProject
 		{47B0C22E-919B-48F0-93AE-19BA2BF018E5} = {47B0C22E-919B-48F0-93AE-19BA2BF018E5}

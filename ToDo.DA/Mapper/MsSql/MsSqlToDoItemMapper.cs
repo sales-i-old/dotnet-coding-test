@@ -5,6 +5,7 @@ using System.Text;
 using System.Data;
 using System.Data.SqlClient;
 using ToDo.Entity;
+using System.Configuration;
 
 namespace ToDo.DA.Mapper.MsSql
 {
@@ -15,10 +16,46 @@ namespace ToDo.DA.Mapper.MsSql
             
         }
 
+        public DataTable GetAllDependantTasks()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection())
+                using (SqlCommand com = new SqlCommand())
+                {
+                    conn.ConnectionString = ConfigurationManager.ConnectionStrings["ToDoDatabase"].ConnectionString;
+                    com.Connection = conn;
+                    com.CommandText = "EXEC usp_GetAllDependantTaskInfoByID";
+                    conn.Open();
+                    SqlDataReader returnvalue = com.ExecuteReader();
+
+                    if (returnvalue.HasRows)
+                    {
+                        dt.Load(returnvalue);
+                        return dt;
+                    }
+                    else
+                    {
+                        throw new RowNotInTableException();
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                //TODO: Write error to log
+                return new DataTable();
+            }
+        }
+
+
+
         public IList<IToDoItem> GetToDoItems(string idFilter = "")
         {
             // sql to execute
-            string sql = "select * from ToDoItems";
+            //string sql = "select * from ToDoItems";
+            string sql = "exec usp_GetAllDependantTaskInfoByID";
 
             // instantiate list to populate
             List<IToDoItem> items = new List<IToDoItem>();
@@ -32,8 +69,7 @@ namespace ToDo.DA.Mapper.MsSql
                 // do we have an id filter?
                 if (!string.IsNullOrEmpty(idFilter))
                 {
-                    sql += " where id = '@id'";
-                    command.Parameters.Add(new SqlParameter("@id", idFilter));
+                   command.Parameters.Add(new SqlParameter("@id",null));
                 }
 
                 try
@@ -44,11 +80,27 @@ namespace ToDo.DA.Mapper.MsSql
                     {
                         while (reader.Read())
                         {
+                            
                             IToDoItem item = new ToDoItem();
                             item.Id = reader.GetGuid(reader.GetOrdinal("id")).ToString();
                             item.Title = reader.GetString(reader.GetOrdinal("title"));
                             item.Description = reader.GetString(reader.GetOrdinal("description"));
                             item.Complete = reader.GetBoolean(reader.GetOrdinal("complete"));
+                            if (!reader.IsDBNull(5))
+                            {
+                               // item.DependantTaskID = reader.GetGuid(reader.GetOrdinal("DependsOnTask")).ToString();
+                                item.DependantTaskTitle = reader.GetString(reader.GetOrdinal("DependantTaskTitle"));
+                            }
+                            else
+                            {
+                                item.DependantTaskID = String.Empty;
+                                item.DependantTaskTitle = String.Empty;
+                            }
+                           
+
+                            // item.DependantTaskID = (item.DependantTaskID!=null) ? reader.GetString(reader.GetOrdinal("DependsOnTask")) : String.Empty;
+                            // item.DependantTaskTitle =(item.DependantTaskTitle!=null) ? reader.GetString(reader.GetOrdinal("DependantTaskTitle")) : String.Empty;
+
 
                             items.Add(item);
                         }
@@ -69,7 +121,7 @@ namespace ToDo.DA.Mapper.MsSql
 
         public string Insert(IToDoItem toDoItem)
         {
-            string sql = "INSERT INTO ToDoItems (id, title, description, complete) OUTPUT INSERTED.id VALUES (NEWID(), @title, @description, 0)";
+            string sql = "INSERT INTO ToDoItems (id, title, description, complete, DependantTaskTitle) OUTPUT INSERTED.id VALUES (NEWID(), @title, @description, 0, @DependantTaskTitle)";
 
             // access the database and retrieve data
             using (IDbConnection conn = GetConnection())
@@ -79,9 +131,13 @@ namespace ToDo.DA.Mapper.MsSql
 
                 IDbDataParameter title = new SqlParameter("@title", toDoItem.Title);
                 IDbDataParameter description = new SqlParameter("@description", toDoItem.Description);
+                IDbDataParameter DependantTaskTitle = new SqlParameter("@DependantTaskTitle", toDoItem.DependantTaskTitle);
+
+                
 
                 command.Parameters.Add(title);
                 command.Parameters.Add(description);
+                command.Parameters.Add(DependantTaskTitle);
 
                 try
                 {

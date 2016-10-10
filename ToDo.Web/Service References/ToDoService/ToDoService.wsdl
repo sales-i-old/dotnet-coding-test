@@ -5,6 +5,7 @@
       <xsd:import schemaLocation="http://localhost:13404/ToDoService.svc?xsd=xsd0" namespace="http://tempuri.org/" />
       <xsd:import schemaLocation="http://localhost:13404/ToDoService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
       <xsd:import schemaLocation="http://localhost:13404/ToDoService.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/ToDo.WCF.Contract" />
+      <xsd:import schemaLocation="http://localhost:13404/ToDoService.svc?xsd=xsd3" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="IToDoService_GetToDoItems_InputMessage">
@@ -19,6 +20,12 @@
   <wsdl:message name="IToDoService_SaveToDoItem_OutputMessage">
     <wsdl:part name="parameters" element="tns:SaveToDoItemResponse" />
   </wsdl:message>
+  <wsdl:message name="IToDoService_GetAllDependantTasks_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllDependantTasks" />
+  </wsdl:message>
+  <wsdl:message name="IToDoService_GetAllDependantTasks_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllDependantTasksResponse" />
+  </wsdl:message>
   <wsdl:portType name="IToDoService">
     <wsdl:operation name="GetToDoItems">
       <wsdl:input wsaw:Action="http://tempuri.org/IToDoService/GetToDoItems" message="tns:IToDoService_GetToDoItems_InputMessage" />
@@ -27,6 +34,10 @@
     <wsdl:operation name="SaveToDoItem">
       <wsdl:input wsaw:Action="http://tempuri.org/IToDoService/SaveToDoItem" message="tns:IToDoService_SaveToDoItem_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IToDoService/SaveToDoItemResponse" message="tns:IToDoService_SaveToDoItem_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAllDependantTasks">
+      <wsdl:input wsaw:Action="http://tempuri.org/IToDoService/GetAllDependantTasks" message="tns:IToDoService_GetAllDependantTasks_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IToDoService/GetAllDependantTasksResponse" message="tns:IToDoService_GetAllDependantTasks_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IToDoService" type="tns:IToDoService">
@@ -42,6 +53,15 @@
     </wsdl:operation>
     <wsdl:operation name="SaveToDoItem">
       <soap:operation soapAction="http://tempuri.org/IToDoService/SaveToDoItem" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAllDependantTasks">
+      <soap:operation soapAction="http://tempuri.org/IToDoService/GetAllDependantTasks" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

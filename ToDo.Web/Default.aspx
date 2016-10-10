@@ -14,9 +14,17 @@
             <asp:TextBox runat="server" ID="txtTask"></asp:TextBox>
             <br />
             <asp:TextBox runat="server" ID="txtDescription"></asp:TextBox>
+            <br />
+             <strong>Name of Dependant Task</strong>
+            <br />
+            <asp:TextBox ID="txtDepTask" runat="server"></asp:TextBox>
+            <br />
             <asp:Button runat="server" ID="btnAddTask" Text="Add Task" OnClick="btn_AddTask_Click" />
+
+
+           
         </div>
-        <asp:DataList runat="server" ID="dlTasks" OnEditCommand="dlTasks_EditCommand" OnUpdateCommand="dlTasks_UpdateCommand" DataKeyField="Id" >
+        <asp:DataList runat="server" ID="dlTasks" OnEditCommand="dlTasks_EditCommand" OnUpdateCommand="dlTasks_UpdateCommand" DataKeyField="Id" OnSelectedIndexChanged="dlTasks_SelectedIndexChanged" >
             <HeaderTemplate>
                 <div id="todoItems">
                     <ol>
@@ -25,6 +33,10 @@
             <ItemTemplate>
                         <li>
                             <%# DataBinder.Eval(Container.DataItem, "Title") %> <asp:CheckBox runat="server" ID="chkComplete" Enabled="false" Checked='<%# DataBinder.Eval(Container.DataItem, "Complete") %>' />
+                            <br />
+                            <strong>Depends on Task</strong> 
+                            <br />
+                           <%# DataBinder.Eval(Container.DataItem, "DependantTaskTitle") %>
                             <br />
                             <asp:LinkButton runat="server" ID="lbEdit" Text="Edit" CommandName="Edit"></asp:LinkButton>
                         </li>
@@ -37,6 +49,7 @@
                             <asp:TextBox runat="server" ID="txtUpdateDescription" Text='<%# DataBinder.Eval(Container.DataItem, "Description") %>'></asp:TextBox>
                             <br />
                             <asp:CheckBox runat="server" ID="chkComplete" Checked='<%# DataBinder.Eval(Container.DataItem, "Complete") %>' />
+                            
                             <br />
                             <asp:Button runat="server" ID="btnUpdate" Text="Save" CommandName="Update" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "Id") %>' />
                         </li>

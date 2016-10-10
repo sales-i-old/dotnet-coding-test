@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="e97bf10c-545c-4675-afbd-16c4d4a52003" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:13404/ToDoService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="ToDoService.disco" MetadataType="Disco" ID="6fe702dd-0ac7-4079-902c-0ed864919cbf" SourceId="1" SourceUrl="http://localhost:13404/ToDoService.svc?disco" />
+    <MetadataFile FileName="ToDoService.wsdl" MetadataType="Wsdl" ID="03c286c1-b9bc-4e41-b8ec-750f9e9820cc" SourceId="1" SourceUrl="http://localhost:13404/ToDoService.svc?wsdl" />
+    <MetadataFile FileName="ToDoService.xsd" MetadataType="Schema" ID="1c395b98-4ba0-4064-9af5-edb2e3f33e28" SourceId="1" SourceUrl="http://localhost:13404/ToDoService.svc?xsd=xsd1" />
+    <MetadataFile FileName="ToDoService1.xsd" MetadataType="Schema" ID="e2aa01ca-3fed-4da8-8b13-cd25a8ea6249" SourceId="1" SourceUrl="http://localhost:13404/ToDoService.svc?xsd=xsd0" />
+    <MetadataFile FileName="ToDoService2.xsd" MetadataType="Schema" ID="00ab2ade-3825-4d5d-ac41-2bda2cb40dce" SourceId="1" SourceUrl="http://localhost:13404/ToDoService.svc?xsd=xsd2" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

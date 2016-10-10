@@ -4,30 +4,44 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Data;
+using Newtonsoft.Json;
 
 namespace ToDo.Web
 {
     public partial class Default : System.Web.UI.Page
     {
+        ToDoService.ToDoServiceClient client = new ToDoService.ToDoServiceClient();
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
             {
-                LoadTasks();                
+                LoadTasks();     
+                         
             }
         }
 
+       
+
+        
         private void LoadTasks()
         {
             // get the todo list items
             ToDoService.ToDoServiceClient client = new ToDoService.ToDoServiceClient();
-
+            
             try
             {
                 List<ToDoService.ToDoItemContract> toDoItems = client.GetToDoItems("").ToList();
-                dlTasks.DataSource = toDoItems;
-                dlTasks.DataBind();
 
+               
+                           
+           
+                dlTasks.DataSource =toDoItems;
+                
+                dlTasks.DataBind();
+                
+                
                 client.Close();
             }
             catch (Exception ex)
@@ -42,6 +56,7 @@ namespace ToDo.Web
             ToDoService.ToDoItemContract toDoItem = new ToDoService.ToDoItemContract();
             toDoItem.Title = txtTask.Text;
             toDoItem.Description = txtDescription.Text;
+            toDoItem.DependantTaskTitle = txtDepTask.Text;
 
             Save(toDoItem);
 
@@ -70,6 +85,7 @@ namespace ToDo.Web
         protected void dlTasks_EditCommand(Object sender, DataListCommandEventArgs e)
         {
             dlTasks.EditItemIndex = e.Item.ItemIndex;
+           
             LoadTasks();
         }
 
@@ -88,6 +104,11 @@ namespace ToDo.Web
 
             // update the UI
             LoadTasks();
+        }
+
+        protected void dlTasks_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -7,5 +7,7 @@ namespace ToDo.Entity
         string Description { get; set; }
         string Id { get; set; }
         string Title { get; set; }
+        string DependantTaskID { get; set; }
+        string DependantTaskTitle { get; set;}
     }
 }
