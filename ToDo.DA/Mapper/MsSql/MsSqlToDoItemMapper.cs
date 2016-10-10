@@ -111,7 +111,7 @@ namespace ToDo.DA.Mapper.MsSql
                             SET title = @title
                             , description = @description
                             , complete = @complete
-                            WHERE id = @ids";
+                            WHERE id = " + new SqlParameter("@id", toDoItem.Id);
 
             // access the database and retrieve data
             using (IDbConnection conn = GetConnection())
