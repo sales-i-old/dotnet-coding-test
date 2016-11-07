@@ -37,5 +37,8 @@ namespace ToDo.Entity
             get { return _complete; }
             set { _complete = value; }
         }
+
+        public string ParentId { get; set; }
+        
     }
 }

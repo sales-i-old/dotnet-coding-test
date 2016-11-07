@@ -49,6 +49,7 @@ namespace ToDo.MVC.Controllers
                 ToDoService.ToDoItemContract task = new ToDoService.ToDoItemContract();
                 task.Title = collection.Get("TaskName");
                 task.Description = collection.Get("TaskDescription");
+                task.ParentId = collection.Get("ParentTask");
 
                 service.SaveToDoItem(task);
 

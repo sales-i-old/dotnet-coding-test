@@ -15,6 +15,8 @@
         <br />
         <%= Html.TextBox("TaskDescription") %>
         <br />
+         Select DependentTask: <%= Html.TextBox("ParentTask")%>
+        <br />
         <input type="submit" value="Save" />
        </div>
 

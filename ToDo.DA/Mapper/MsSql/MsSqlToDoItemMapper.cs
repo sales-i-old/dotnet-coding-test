@@ -69,7 +69,7 @@ namespace ToDo.DA.Mapper.MsSql
 
         public string Insert(IToDoItem toDoItem)
         {
-            string sql = "INSERT INTO ToDoItems (id, title, description, complete) OUTPUT INSERTED.id VALUES (NEWID(), @title, @description, 0)";
+            string sql = "INSERT INTO ToDoItems (id, title, description, complete, ParentTask) OUTPUT INSERTED.id VALUES (NEWID(), @title, @description, 0, @ParentId)";
 
             // access the database and retrieve data
             using (IDbConnection conn = GetConnection())
@@ -79,6 +79,7 @@ namespace ToDo.DA.Mapper.MsSql
 
                 IDbDataParameter title = new SqlParameter("@title", toDoItem.Title);
                 IDbDataParameter description = new SqlParameter("@description", toDoItem.Description);
+                IDbDataParameter ParentTask = new SqlParameter("@parentTask", toDoItem.ParentId);
 
                 command.Parameters.Add(title);
                 command.Parameters.Add(description);
@@ -111,7 +112,7 @@ namespace ToDo.DA.Mapper.MsSql
                             SET title = @title
                             , description = @description
                             , complete = @complete
-                            WHERE id = @ids";
+                            WHERE id = @id";
 
             // access the database and retrieve data
             using (IDbConnection conn = GetConnection())
