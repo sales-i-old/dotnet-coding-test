@@ -25,8 +25,18 @@ namespace ToDo.Web
             try
             {
                 List<ToDoService.ToDoItemContract> toDoItems = client.GetToDoItems("").ToList();
-                dlTasks.DataSource = toDoItems;
+                //TODO: Added this just to show the parent Task been added.
+                var dlTasksList = toDoItems;
+                var dlList = from a in dlTasksList
+                              join b in toDoItems
+                              on a.ParentId equals b.Id
+                              select new { a.Id, a.Title, a.Description, a.Complete, ParentId=b.Title }
+                              ;
+                dlTasks.DataSource = dlList;
                 dlTasks.DataBind();
+                txtDropDownList.DataSource = toDoItems;
+                txtDropDownList.DataBind();
+                
 
                 client.Close();
             }
@@ -42,7 +52,7 @@ namespace ToDo.Web
             ToDoService.ToDoItemContract toDoItem = new ToDoService.ToDoItemContract();
             toDoItem.Title = txtTask.Text;
             toDoItem.Description = txtDescription.Text;
-
+            toDoItem.ParentId = txtDropDownList.SelectedValue;
             Save(toDoItem);
 
             // update the UI
@@ -70,7 +80,7 @@ namespace ToDo.Web
         protected void dlTasks_EditCommand(Object sender, DataListCommandEventArgs e)
         {
             dlTasks.EditItemIndex = e.Item.ItemIndex;
-            LoadTasks();
+            LoadTasks();                    
         }
 
         protected void dlTasks_UpdateCommand(Object sender, DataListCommandEventArgs e)
@@ -89,5 +99,7 @@ namespace ToDo.Web
             // update the UI
             LoadTasks();
         }
+
+       
     }
 }

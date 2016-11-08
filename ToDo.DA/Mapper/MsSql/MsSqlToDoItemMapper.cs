@@ -49,7 +49,7 @@ namespace ToDo.DA.Mapper.MsSql
                             item.Title = reader.GetString(reader.GetOrdinal("title"));
                             item.Description = reader.GetString(reader.GetOrdinal("description"));
                             item.Complete = reader.GetBoolean(reader.GetOrdinal("complete"));
-
+                            item.ParentId = reader.IsDBNull(reader.GetOrdinal("parentTask"))?string.Empty:reader.GetString(reader.GetOrdinal("parentTask")); //TODO Need to set index instead of empty string.
                             items.Add(item);
                         }
                     }
@@ -79,10 +79,12 @@ namespace ToDo.DA.Mapper.MsSql
 
                 IDbDataParameter title = new SqlParameter("@title", toDoItem.Title);
                 IDbDataParameter description = new SqlParameter("@description", toDoItem.Description);
-                IDbDataParameter ParentTask = new SqlParameter("@parentTask", toDoItem.ParentId);
+                IDbDataParameter ParentTask = new SqlParameter("@ParentId", SqlDbType.NVarChar);
+                ParentTask.Value = (object)toDoItem.ParentId ?? DBNull.Value;
 
                 command.Parameters.Add(title);
                 command.Parameters.Add(description);
+                command.Parameters.Add(ParentTask);
 
                 try
                 {
