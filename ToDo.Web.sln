@@ -14,6 +14,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDo.Core", "ToDo.Core\ToDo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDo.Entity", "ToDo.Entity\ToDo.Entity.csproj", "{553617CC-1EF5-41C9-BAB0-1FCD66235AA8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDo.MVC", "ToDo.MVC\ToDo.MVC.csproj", "{D3D17E92-DB31-4053-816A-C60D03FAD671}"
+	ProjectSection(ProjectDependencies) = postProject
+		{47B0C22E-919B-48F0-93AE-19BA2BF018E5} = {47B0C22E-919B-48F0-93AE-19BA2BF018E5}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +45,10 @@ Global
 		{553617CC-1EF5-41C9-BAB0-1FCD66235AA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{553617CC-1EF5-41C9-BAB0-1FCD66235AA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{553617CC-1EF5-41C9-BAB0-1FCD66235AA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3D17E92-DB31-4053-816A-C60D03FAD671}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3D17E92-DB31-4053-816A-C60D03FAD671}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3D17E92-DB31-4053-816A-C60D03FAD671}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3D17E92-DB31-4053-816A-C60D03FAD671}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
